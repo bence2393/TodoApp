@@ -27,44 +27,75 @@ namespace TodoApp.WebApplication.Pages.TodoItems
                 return NotFound();
             }
 
-            TodoItem = await _context.TodoItem.FirstOrDefaultAsync(m => m.Id == id);
+            TodoItem = await _context.TodoItems.FindAsync(id);
 
             if (TodoItem == null)
             {
                 return NotFound();
             }
             return Page();
+
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //TodoItem = await _context.TodoItem.FirstOrDefaultAsync(m => m.Id == id);
+
+            //if (TodoItem == null)
+            //{
+            //    return NotFound();
+            //}
+            //return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (!ModelState.IsValid)
+            var studentToUpdate = await _context.TodoItems.FindAsync(id);
+
+            if (studentToUpdate == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(TodoItem).State = EntityState.Modified;
-
-            try
+            if (await TryUpdateModelAsync<TodoItem>(
+                studentToUpdate,
+                "todoItem",
+                t => t.Message, t => t.IsDone))
             {
                 await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TodoItemExists(TodoItem.Id))
-                {
-                    return NotFound();
-                }
-
-                throw;
+                return RedirectToPage("./Index");
             }
 
-            return RedirectToPage("./Index");
+            return Page();
+
+            //if (!ModelState.IsValid)
+            //{
+            //    return Page();
+            //}
+
+            //_context.Attach(TodoItem).State = EntityState.Modified;
+
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!TodoItemExists(TodoItem.Id))
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    throw;
+            //}
+
+            //return RedirectToPage("./Index");
         }
 
         private bool TodoItemExists(int id)
         {
-            return _context.TodoItem.Any(e => e.Id == id);
+            return _context.TodoItems.Any(e => e.Id == id);
         }
     }
 }

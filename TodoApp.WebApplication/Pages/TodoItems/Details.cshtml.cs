@@ -25,7 +25,7 @@ namespace TodoApp.WebApplication.Pages.TodoItems
                 return NotFound();
             }
 
-            TodoItem = await _context.TodoItem.FirstOrDefaultAsync(m => m.Id == id);
+            TodoItem = await _context.TodoItems.FirstOrDefaultAsync(m => m.Id == id);
 
             if (TodoItem == null)
             {

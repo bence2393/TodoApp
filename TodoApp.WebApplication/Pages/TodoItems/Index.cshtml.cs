@@ -16,11 +16,11 @@ namespace TodoApp.WebApplication.Pages.TodoItems
             _context = context;
         }
 
-        public IList<TodoItem> TodoItem { get;set; }
+        public IList<TodoItem> TodoItems { get;set; }
 
         public async Task OnGetAsync()
         {
-            TodoItem = await _context.TodoItem.ToListAsync();
+            TodoItems = await _context.TodoItems.ToListAsync();
         }
     }
 }

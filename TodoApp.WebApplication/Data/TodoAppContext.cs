@@ -10,6 +10,6 @@ namespace TodoApp.WebApplication.Data
         {
         }
 
-        public DbSet<TodoItem> TodoItem { get; set; }
+        public DbSet<TodoItem> TodoItems { get; set; }
     }
 }

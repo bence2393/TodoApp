@@ -25,15 +25,19 @@ namespace TodoApp.WebApplication.Pages.TodoItems
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            var emptyTodoItem = new TodoItem();
+
+            if (await TryUpdateModelAsync<TodoItem>(
+                emptyTodoItem,
+                "todoItem",
+                t => t.Message, t => t.IsDone))
             {
-                return Page();
+                _context.TodoItems.Add(emptyTodoItem);
+                await _context.SaveChangesAsync();
+                return RedirectToPage("./Index");
             }
 
-            _context.TodoItem.Add(TodoItem);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            return Page();
         }
     }
 }
