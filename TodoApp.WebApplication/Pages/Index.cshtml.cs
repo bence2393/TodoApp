@@ -15,6 +15,7 @@ namespace TodoApp.WebApplication.Pages
 
         public IActionResult OnGet()
         {
+            _logger.Log(LogLevel.Information, "Redirecting to TodoItems/Index page.");
             return RedirectToPage("TodoItems/Index");
         }
     }
