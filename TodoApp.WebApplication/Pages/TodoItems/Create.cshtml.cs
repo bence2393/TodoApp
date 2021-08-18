@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TodoApp.WebApplication.Data;
 using TodoApp.WebApplication.Models;
 
@@ -12,9 +8,9 @@ namespace TodoApp.WebApplication.Pages.TodoItems
 {
     public class CreateModel : PageModel
     {
-        private readonly TodoApp.WebApplication.Data.TodoAppContext _context;
+        private readonly TodoAppContext _context;
 
-        public CreateModel(TodoApp.WebApplication.Data.TodoAppContext context)
+        public CreateModel(TodoAppContext context)
         {
             _context = context;
         }

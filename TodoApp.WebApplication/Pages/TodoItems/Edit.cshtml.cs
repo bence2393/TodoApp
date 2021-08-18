@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TodoApp.WebApplication.Data;
 using TodoApp.WebApplication.Models;
@@ -13,9 +10,9 @@ namespace TodoApp.WebApplication.Pages.TodoItems
 {
     public class EditModel : PageModel
     {
-        private readonly TodoApp.WebApplication.Data.TodoAppContext _context;
+        private readonly TodoAppContext _context;
 
-        public EditModel(TodoApp.WebApplication.Data.TodoAppContext context)
+        public EditModel(TodoAppContext context)
         {
             _context = context;
         }
@@ -60,10 +57,8 @@ namespace TodoApp.WebApplication.Pages.TodoItems
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+
+                throw;
             }
 
             return RedirectToPage("./Index");
