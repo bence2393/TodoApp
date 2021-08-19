@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace TodoApp.WebApplication.Pages.TodoItems
 {
     public class IndexModel : PageModel
     {
-        public IList<TodoItem> TodoItems { get;set; }
+        public IList<TodoItem> TodoItems { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
@@ -21,6 +22,19 @@ namespace TodoApp.WebApplication.Pages.TodoItems
         public string TodoItemIsDone { get; set; }
 
         public SelectList IsDone { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public int CurrentPage { get; set; } = 1;
+
+        public int Count { get; set; }
+
+        public bool ShowPrevious => CurrentPage > 1;
+
+        public bool ShowNext => CurrentPage < TotalPages;
+
+        public int TotalPages => (int)Math.Ceiling(decimal.Divide(Count, PageSize));
+
+        private const int PageSize = 25;
 
         private readonly TodoAppContext _context;
 
@@ -32,8 +46,8 @@ namespace TodoApp.WebApplication.Pages.TodoItems
         public async Task OnGetAsync()
         {
             var isDoneQueryable = from t in _context.TodoItems
-                orderby t.IsDone
-                select t.IsDone;
+                                  orderby t.IsDone
+                                  select t.IsDone;
 
             var todoItems = from t in _context.TodoItems select t;
 
@@ -48,7 +62,15 @@ namespace TodoApp.WebApplication.Pages.TodoItems
             }
             IsDone = new SelectList(await isDoneQueryable.Distinct().ToListAsync());
 
-            TodoItems = await todoItems.ToListAsync();
+            var todoItemsList = await todoItems.ToListAsync();
+            Count = todoItemsList.Count;
+
+            TodoItems = GetPaginatedResult(todoItemsList, CurrentPage, PageSize);
+        }
+
+        public List<TodoItem> GetPaginatedResult(List<TodoItem> todoItems, int currentPage, int pageSize = 10)
+        {
+            return todoItems.OrderBy(t => t.Id).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
         }
     }
 }

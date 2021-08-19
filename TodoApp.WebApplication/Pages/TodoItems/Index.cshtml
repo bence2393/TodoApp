@@ -12,11 +12,10 @@
 </p>
 <form>
     <p>
-        Search in message: <input type="text" asp-for="SearchString"/>
+        Search in message: <input type="text" asp-for="SearchString" />
         Done: <select asp-for="TodoItemIsDone" asp-items="Model.IsDone">
             <option value="">All</option>
         </select>
-        <input type="submit" value="Filter"/>
     </p>
 </form>
 
@@ -33,20 +32,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.TodoItems) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsDone)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.TodoItems)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDone)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div>
+    <ul class="pagination">
+        @if (Model.ShowPrevious)
+        {
+            <li class="page-item">
+                <a asp-page="./index" asp-route-currentpage="@(Model.CurrentPage - 1)" class="page-link">Previous</a>
+            </li>
+        }
+        @for (var i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a asp-page="/pagination" asp-route-currentpage="@i" class="page-link">@i</a>
+            </li>
+        }
+        @if (Model.ShowNext)
+        {
+            <li class="page-item">
+                <a asp-page="./index" asp-route-currentpage="@(Model.CurrentPage + 1)" class="page-link">Next</a>
+            </li>
+        }
+    </ul>
+</div>
