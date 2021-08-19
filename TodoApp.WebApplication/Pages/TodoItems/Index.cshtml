@@ -13,7 +13,7 @@
 <form>
     <p>
         Search in message: <input type="text" asp-for="SearchString" />
-        Done: <select asp-for="TodoItemIsDone" asp-items="Model.IsDone">
+        Done: <select asp-for="TodoItemIsDone" asp-items="Model.IsDoneSelectList">
             <option value="">All</option>
         </select>
         Items per page: <select asp-for="PageSize" asp-items="Model.PageSizeSelectList">
