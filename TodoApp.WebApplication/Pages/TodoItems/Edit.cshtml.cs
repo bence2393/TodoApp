@@ -34,32 +34,19 @@ namespace TodoApp.WebApplication.Pages.TodoItems
                 return NotFound();
             }
             return Page();
-
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //TodoItem = await _context.TodoItem.FirstOrDefaultAsync(m => m.Id == id);
-
-            //if (TodoItem == null)
-            //{
-            //    return NotFound();
-            //}
-            //return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int id)
         {
-            var studentToUpdate = await _context.TodoItems.FindAsync(id);
+            var todoItemToUpdate = await _context.TodoItems.FindAsync(id);
 
-            if (studentToUpdate == null)
+            if (todoItemToUpdate == null)
             {
                 return NotFound();
             }
 
-            if (await TryUpdateModelAsync<TodoItem>(
-                studentToUpdate,
+            if (await TryUpdateModelAsync(
+                todoItemToUpdate,
                 "todoItem",
                 t => t.Message, t => t.IsDone))
             {
@@ -68,29 +55,6 @@ namespace TodoApp.WebApplication.Pages.TodoItems
             }
 
             return Page();
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return Page();
-            //}
-
-            //_context.Attach(TodoItem).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!TodoItemExists(TodoItem.Id))
-            //    {
-            //        return NotFound();
-            //    }
-
-            //    throw;
-            //}
-
-            //return RedirectToPage("./Index");
         }
 
         private bool TodoItemExists(int id)

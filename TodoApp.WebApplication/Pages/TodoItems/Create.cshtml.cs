@@ -27,7 +27,7 @@ namespace TodoApp.WebApplication.Pages.TodoItems
         {
             var emptyTodoItem = new TodoItem();
 
-            if (await TryUpdateModelAsync<TodoItem>(
+            if (await TryUpdateModelAsync(
                 emptyTodoItem,
                 "todoItem",
                 t => t.Message, t => t.IsDone))
