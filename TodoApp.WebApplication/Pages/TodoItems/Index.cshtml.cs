@@ -26,6 +26,11 @@ namespace TodoApp.WebApplication.Pages.TodoItems
         [BindProperty(SupportsGet = true)]
         public int CurrentPage { get; set; } = 1;
 
+        public SelectList PageSizeSelectList { get; set; }
+
+        [BindProperty(SupportsGet = true)] 
+        public int PageSize { get; set; } = 10;
+
         public int Count { get; set; }
 
         public bool ShowPrevious => CurrentPage > 1;
@@ -34,8 +39,6 @@ namespace TodoApp.WebApplication.Pages.TodoItems
 
         public int TotalPages => (int)Math.Ceiling(decimal.Divide(Count, PageSize));
 
-        private const int PageSize = 25;
-
         private readonly TodoAppContext _context;
 
         public IndexModel(TodoAppContext context)
@@ -43,26 +46,28 @@ namespace TodoApp.WebApplication.Pages.TodoItems
             _context = context;
         }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string searchString, string todoItemIsDone)
         {
+            PageSizeSelectList = new SelectList(new[] { 1, 5, 10, 15, 20, 25 });
+
             var isDoneQueryable = from t in _context.TodoItems
                                   orderby t.IsDone
                                   select t.IsDone;
 
-            var todoItems = from t in _context.TodoItems select t;
+            var todoItemsQueryable = from t in _context.TodoItems select t;
 
             if (!string.IsNullOrEmpty(SearchString))
             {
-                todoItems = todoItems.Where(t => t.Message.Contains(SearchString));
+                todoItemsQueryable = todoItemsQueryable.Where(t => t.Message.Contains(SearchString));
             }
 
             if (TodoItemIsDone != null)
             {
-                todoItems = todoItems.Where(t => t.IsDone == TodoItemIsDone.Equals("True"));
+                todoItemsQueryable = todoItemsQueryable.Where(t => t.IsDone == TodoItemIsDone.Equals("True"));
             }
             IsDone = new SelectList(await isDoneQueryable.Distinct().ToListAsync());
 
-            var todoItemsList = await todoItems.ToListAsync();
+            var todoItemsList = await todoItemsQueryable.ToListAsync();
             Count = todoItemsList.Count;
 
             TodoItems = GetPaginatedResult(todoItemsList, CurrentPage, PageSize);
